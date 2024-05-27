@@ -2,16 +2,12 @@
 
 require_once("config.php");
 
-$sql = new SQL();
+$root = new usuario();
 
-$usuarios = $sql->select("SELECT * FROM tb_usuarios");
+$root->loadById(5);
 
-foreach ($usuarios as $row) {
-    foreach($row as $index => $value){
-        echo "<b>$index</b>: $value<br>";
-    }
-    echo "========================<br>";
-}
+echo $root;
+//echo $root;
 
 
 
