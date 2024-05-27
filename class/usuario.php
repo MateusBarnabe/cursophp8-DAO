@@ -44,12 +44,7 @@ class usuario{
             ":ID"=>$id
         ));
         if (count($result)>0) {
-            $row = $result[0];
-            $this->setIdusuario($row["idusuario"]);
-            $this->setDesLogin($row["deslogin"]);
-            $this->setDesSenha($row["dessenha"]);
-            $this->setDtcadastro(new DateTime($row["dtcadastro"]));
-
+            $this->setData($result[0]);
         }
     }
 
@@ -73,16 +68,56 @@ class usuario{
             ":LOGIN"=>$login, ":PASSWORD"=>$password
         ));
         if (count($result)>0) {
-            $row = $result[0];
-            $this->setIdusuario($row["idusuario"]);
-            $this->setDesLogin($row["deslogin"]);
-            $this->setDesSenha($row["dessenha"]);
-            $this->setDtcadastro(new DateTime($row["dtcadastro"]));
+            $this->setData($result[0]);
 
         }else {
             throw new Exception("Login e/ou senha invalidos!");
         }
     }
+
+
+    public function setData($Data){
+    
+        $this->setIdusuario($Data["idusuario"]);
+        $this->setDesLogin($Data["deslogin"]);
+        $this->setDesSenha($Data["dessenha"]);
+        $this->setDtcadastro(new DateTime($Data["dtcadastro"]));
+
+    }
+
+
+    public function insert(){
+        $sql = new SQL();
+        $results = $sql->select("CALL sp_usuarios_insert(:LOGIN, :PASSWORD)", array(
+            ":LOGIN"=>$this->getDesLogin(),
+            ":PASSWORD"=>$this->getDesSenha()
+        ));
+        if(count($results) > 0){
+            $this->setData($results[0]);
+        }
+    }
+
+    public function update($login, $password){
+        $this->setDesLogin($login);
+        $this->setDesSenha($password);
+
+        $sql = new SQL();
+        $results = $sql->executeQuery("UPDATE tb_usuarios SET deslogin = :LOGIN, dessenha = :PASSWORD WHERE idusuario = :ID ", array(
+            ":LOGIN"=>$this->getDesLogin(),
+            ":PASSWORD"=>$this->getDesSenha(),
+            ":ID"=>$this->getIdusuario(),
+        ));
+        
+
+    }
+    public function __construct($login = "", $password = "")
+    {
+        $this->setDesLogin($login);
+        $this->setDesSenha($password);
+    }
+
+
+
     public function __toString()
     {
         return json_encode(array(
@@ -90,7 +125,6 @@ class usuario{
             "deslogin"=>$this->getDesLogin(),
             "dessenha"=>$this->getDesSenha(),
             "dtcadastro"=>$this->getDtcadastro()->format("d/m/Y  h:i:s")
-
         ));
     }
 }
