@@ -23,11 +23,15 @@ echo $adicionar;*/
 //$aluno = new usuario;
 //$aluno->mostrar();
 
-$upar = new usuario();
-$upar->loadById(2);
-echo $upar;
-$upar->update("bebezinho do tercio", "dinao");
-echo $upar;
+//$upar = new usuario();
+//$upar->loadById(2);
+//echo $upar;
+//$upar->update("bebezinho do tercio", "dinao");
+//echo $upar;
+
+$delete = new usuario();
+$delete->delete(2);
+echo $delete;
 
 
 
